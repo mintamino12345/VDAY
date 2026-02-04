@@ -13,75 +13,112 @@
 
     body {
       margin: 0;
-      height: 100vh;
-      background: linear-gradient(135deg, #0f172a, #020617);
+      min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
+      overflow: hidden;
       color: white;
+      background: #0b1220;
+    }
+
+    /* Background photo */
+    .bg {
+      position: fixed;
+      inset: 0;
+      background-image: url("IMG_8383.png");
+      background-size: cover;
+      background-position: center;
+      filter: blur(2px) brightness(0.6);
+      transform: scale(1.05);
+      z-index: -2;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle, rgba(0,0,0,0.2), rgba(0,0,0,0.65));
+      z-index: -1;
     }
 
     .card {
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 32px 24px;
-      width: 90%;
-      max-width: 420px;
+      width: min(92vw, 520px);
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(14px);
+      border-radius: 22px;
+      padding: 28px 22px;
       text-align: center;
-      position: relative;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
 
     h1 {
-      font-size: 26px;
-      margin-bottom: 24px;
+      font-size: 28px;
+      margin-bottom: 20px;
+      line-height: 1.25;
     }
 
     .buttons {
+      position: relative;
+      height: 170px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      margin-top: 24px;
-      position: relative;
+      margin-top: 20px;
     }
 
     button {
       padding: 14px;
       font-size: 18px;
+      font-weight: 700;
       border-radius: 14px;
       border: none;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.15s ease;
+    }
+
+    button:active {
+      transform: scale(0.97);
     }
 
     .yes {
-      background: #60a5fa;
-      color: #020617;
-      font-weight: 600;
+      background: #5aa9ff;
+      color: #0b1220;
     }
 
-    .yes-love {
-      background: #f472b6;
-      color: #020617;
-      font-weight: 700;
+    .yes2 {
+      background: #ff70b8;
+      color: #0b1220;
     }
 
+    /* NO button that escapes */
     .no {
-      background: #374151;
-      color: #e5e7eb;
       position: absolute;
-      left: 0;
-      right: 0;
+      left: 10px;
+      top: 110px;
+      width: calc(100% - 20px);
+      height: 52px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.18);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      user-select: none;
     }
 
     .result {
-      font-size: 20px;
+      font-size: 18px;
       line-height: 1.5;
+      white-space: pre-line;
     }
   </style>
 </head>
 
 <body>
+  <div class="bg"></div>
+  <div class="overlay"></div>
 
   <div class="card" id="card">
     <h1>
@@ -90,49 +127,46 @@
     </h1>
 
     <div class="buttons" id="buttons">
-      <button class="yes" onclick="accept()">Yes</button>
-      <button class="yes-love" onclick="accept()">Yes, l’amour de ma vie</button>
-      <button class="no" id="noBtn">Non</button>
+      <button class="yes" id="yes1">Yes</button>
+      <button class="yes2" id="yes2">Yes, l’amour de ma vie</button>
+      <div class="no" id="no">No</div>
     </div>
+
+    <div class="result" id="result" style="display:none;"></div>
   </div>
 
   <script>
-    const noBtn = document.getElementById("noBtn");
-    const card = document.getElementById("card");
+    const yes1 = document.getElementById("yes1");
+    const yes2 = document.getElementById("yes2");
+    const no = document.getElementById("no");
+    const buttons = document.getElementById("buttons");
+    const result = document.getElementById("result");
 
-    function moveNo() {
-      const cardRect = card.getBoundingClientRect();
-      const btnRect = noBtn.getBoundingClientRect();
+    // Make NO button move randomly
+    setInterval(() => {
+      const x = Math.random() * 60 - 30;
+      const y = Math.random() * 40 - 20;
+      no.style.transform = `translate(${x}px, ${y}px)`;
+    }, 500);
 
-      const maxX = cardRect.width - btnRect.width;
-      const maxY = cardRect.height - btnRect.height;
+    function showResult(choice) {
+      buttons.style.display = "none";
+      result.style.display = "block";
 
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
+      result.textContent =
+`✅ Choix validé : ${choice}
 
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
+Je t’aime et je t’aimerais toujours l’amour de ma vie,
+la future maman de mes enfants.
+Je ferais de toi ma reine.
+
+On va tout surmonter ensemble,
+je crois en toi, en nous et en notre avenir.
+Si ce n’est pas toi, c’est personne. 💖`;
     }
 
-    noBtn.addEventListener("mouseenter", moveNo);
-    noBtn.addEventListener("touchstart", moveNo);
-
-    function accept() {
-      card.innerHTML = `
-        <div class="result">
-          <div style="font-size:22px; margin-bottom:14px;">
-            Yes, l’amour de ma vie 💍
-          </div>
-
-          <div>
-            Je t’aime et je t’aimerai toujours l’amour de ma vie,<br>
-            la future maman de mes enfants.<br><br>
-            Je ferai de toi ma reine 👑❤️
-          </div>
-        </div>
-      `;
-    }
+    yes1.onclick = () => showResult("Yes");
+    yes2.onclick = () => showResult("Yes, l’amour de ma vie 💍");
   </script>
-
 </body>
 </html>
