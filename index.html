@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Valentine 💖</title>
 
 <style>
@@ -13,46 +13,36 @@
 
 body {
   margin: 0;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* PHOTO EN FOND */
-.background {
-  position: fixed;
-  inset: 0;
-  background: url("IMG_8383.png") center/cover no-repeat;
-  z-index: 0;
-}
-
-/* LÉGER FLOU POUR LIRE LE TEXTE */
-.overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.25);
-  z-index: 1;
-}
-
-/* CARTE CENTRALE */
-.card {
-  position: relative;
-  z-index: 2;
-  width: 90%;
-  max-width: 420px;
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(14px);
-  border-radius: 22px;
-  padding: 28px;
-  text-align: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a, #020617);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   color: white;
-  margin: auto;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
+.card {
+  width: 92%;
+  max-width: 420px;
+  background: rgba(255,255,255,0.10);
+  backdrop-filter: blur(14px);
+  border-radius: 24px;
+  padding: 20px;
+  text-align: center;
+  position: relative;
+}
+
+/* IMAGE BIEN VISIBLE */
+.photo {
+  width: 100%;
+  border-radius: 18px;
+  margin-bottom: 18px;
+}
+
+/* TITRE */
 h1 {
-  margin-bottom: 22px;
-  font-size: 26px;
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
 /* BOUTONS */
@@ -60,11 +50,10 @@ h1 {
   display: flex;
   flex-direction: column;
   gap: 14px;
-  position: relative;
 }
 
 button {
-  padding: 16px;
+  padding: 14px;
   font-size: 18px;
   border-radius: 14px;
   border: none;
@@ -72,79 +61,92 @@ button {
 }
 
 .yes {
-  background: #5fa9ff;
+  background: #60a5fa;
+  color: black;
 }
 
 .yes-love {
-  background: #ff7bbd;
+  background: #fb7185;
+  color: black;
 }
 
-/* NO QUI BOUGE */
+/* BOUTON NO QUI FUIT */
 .no {
-  background: #666;
+  background: #555;
   color: white;
   position: absolute;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
 }
 
-/* MESSAGE FINAL */
+/* RESULTAT */
 .result {
-  display: none;
   margin-top: 20px;
   font-size: 18px;
-  line-height: 1.5;
+  display: none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="background"></div>
-<div class="overlay"></div>
-
 <div class="card">
-  <h1>Ines Miss Belhaj 💖<br>Would you be my Valentine?</h1>
+  <!-- PHOTO VISIBLE -->
+  <img src="IMG_8383.png" class="photo" alt="Nous deux">
+
+  <h1>
+    Ines Miss Belhaj 💖<br>
+    Would you be my Valentine?
+  </h1>
 
   <div class="buttons">
     <button class="yes" onclick="accept(false)">Yes</button>
     <button class="yes-love" onclick="accept(true)">Yes, l’amour de ma vie</button>
-    <button class="no" id="noBtn">No</button>
   </div>
+
+  <button class="no" id="noBtn">No</button>
 
   <div class="result" id="result"></div>
 </div>
 
 <script>
 const noBtn = document.getElementById("noBtn");
-const result = document.getElementById("result");
 
-/* NO IMPOSSIBLE À CLIQUER */
-document.addEventListener("mousemove", () => {
-  const x = Math.random() * 200 - 100;
-  const y = Math.random() * 200 - 100;
-  noBtn.style.transform = `translate(${x}px, ${y}px)`;
-});
+noBtn.addEventListener("mouseenter", moveNo);
+noBtn.addEventListener("touchstart", moveNo);
 
-/* RÉPONSE */
-function accept(isLove) {
+function moveNo() {
+  const card = document.querySelector(".card");
+  const maxX = card.offsetWidth - noBtn.offsetWidth;
+  const maxY = card.offsetHeight - noBtn.offsetHeight;
+
+  const x = Math.random() * maxX;
+  const y = Math.random() * maxY;
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+
+function accept(love) {
   document.querySelector(".buttons").style.display = "none";
+  noBtn.style.display = "none";
+
+  const result = document.getElementById("result");
   result.style.display = "block";
 
-  if (isLove) {
+  if (love) {
     result.innerHTML = `
-      💍 <strong>Yes, l’amour de ma vie</strong><br><br>
-      C’est officiel maintenant 💖<br>
-      Je t’attendais 🌹<br><br>
-      Je t’aime et je t’aimerai toujours, l’amour de ma vie,<br>
-      la future maman de mes enfants.<br>
+      💍 Je t’aime et je t’aimerai toujours,<br>
+      l’amour de ma vie,<br>
+      la future maman de mes enfants.<br><br>
       Je ferai de toi ma reine 👑<br><br>
-      On va tout surmonter ensemble,<br>
-      je crois en toi, en nous et en notre avenir.<br>
-      Si ce n’est pas toi, c’est personne.
+      On va tout surmonter ensemble.<br>
+      Je crois en toi, en nous et en notre avenir.<br>
+      Si ce n’est pas toi, c’est personne ❤️
     `;
   } else {
-    result.innerHTML = `💖 J’ai toujours su que ce serait toi.`;
+    result.innerHTML = "Je savais que tu dirais oui 💖";
   }
 }
 </script>
