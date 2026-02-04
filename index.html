@@ -1,155 +1,166 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Valentine 💖</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valentine 💖</title>
 
-<style>
-* {
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 
-body {
-  margin: 0;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #0f172a, #020617);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-}
+    /* IMPORTANT : PAS DE BACKGROUND IMAGE ICI */
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background: linear-gradient(135deg, #0f172a, #020617);
+      color:#fff;
+      padding:18px;
+    }
 
-.card {
-  width: 92%;
-  max-width: 420px;
-  background: rgba(255,255,255,0.10);
-  backdrop-filter: blur(14px);
-  border-radius: 24px;
-  padding: 20px;
-  text-align: center;
-  position: relative;
-}
+    .card{
+      width:min(420px, 94vw);
+      background: rgba(255,255,255,0.10);
+      backdrop-filter: blur(14px);
+      border-radius: 24px;
+      padding: 18px;
+      text-align:center;
+      position:relative;
+      overflow:hidden; /* pour garder le NO dans la card */
+    }
 
-/* IMAGE BIEN VISIBLE */
-.photo {
-  width: 100%;
-  border-radius: 18px;
-  margin-bottom: 18px;
-}
+    /* PHOTO VISIBLE (DANS LA CARD) */
+    .photo{
+      width:100%;
+      display:block;
+      border-radius:18px;
+      margin-bottom:14px;
+      object-fit: cover;
+      max-height: 320px;
+    }
 
-/* TITRE */
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
-}
+    h1{
+      margin: 6px 0 14px;
+      font-size: 24px;
+      line-height: 1.2;
+    }
 
-/* BOUTONS */
-.buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
+    .buttons{
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      margin-top: 10px;
+      position:relative;
+      z-index:2; /* au-dessus du NO */
+    }
 
-button {
-  padding: 14px;
-  font-size: 18px;
-  border-radius: 14px;
-  border: none;
-  cursor: pointer;
-}
+    button{
+      border:none;
+      border-radius:14px;
+      padding:14px;
+      font-size:18px;
+      cursor:pointer;
+    }
 
-.yes {
-  background: #60a5fa;
-  color: black;
-}
+    .yes{ background:#60a5fa; color:#0b1220; font-weight:600; }
+    .yeslove{ background:#fb7185; color:#0b1220; font-weight:700; }
 
-.yes-love {
-  background: #fb7185;
-  color: black;
-}
+    /* NO QUI FUIT */
+    #noBtn{
+      position:absolute;
+      left: 12px;
+      top: 12px;
+      padding: 10px 16px;
+      border-radius: 14px;
+      background:#505050;
+      color:#fff;
+      font-size:16px;
+      z-index:1;
+      pointer-events:none; /* IMPORTANT : ne bloque jamais les clics */
+      opacity: 0.95;
+      user-select:none;
+    }
 
-/* BOUTON NO QUI FUIT */
-.no {
-  background: #555;
-  color: white;
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-/* RESULTAT */
-.result {
-  margin-top: 20px;
-  font-size: 18px;
-  display: none;
-}
-</style>
+    .result{
+      display:none;
+      margin-top: 16px;
+      font-size: 18px;
+      line-height: 1.35;
+      position:relative;
+      z-index:3;
+    }
+  </style>
 </head>
 
 <body>
+  <div class="card" id="card">
+    <!-- Mets bien le NOM EXACT du fichier dans ton repo -->
+    <img src="IMG_8383.png" class="photo" alt="Nous deux">
 
-<div class="card">
-  <!-- PHOTO VISIBLE -->
-  <img src="IMG_8383.png" class="photo" alt="Nous deux">
+    <h1>Ines Miss Belhaj 💖<br>Would you be my Valentine?</h1>
 
-  <h1>
-    Ines Miss Belhaj 💖<br>
-    Would you be my Valentine?
-  </h1>
+    <div class="buttons" id="buttons">
+      <button class="yes" onclick="accept(false)">Yes</button>
+      <button class="yeslove" onclick="accept(true)">Yes, l’amour de ma vie</button>
+    </div>
 
-  <div class="buttons">
-    <button class="yes" onclick="accept(false)">Yes</button>
-    <button class="yes-love" onclick="accept(true)">Yes, l’amour de ma vie</button>
+    <div id="noBtn">No</div>
+
+    <div class="result" id="result"></div>
   </div>
 
-  <button class="no" id="noBtn">No</button>
+  <script>
+    const card = document.getElementById("card");
+    const noBtn = document.getElementById("noBtn");
 
-  <div class="result" id="result"></div>
-</div>
+    // Mouvement ULTRA rapide en continu
+    function rand(min, max){ return Math.random() * (max - min) + min; }
 
-<script>
-const noBtn = document.getElementById("noBtn");
+    function moveNo(){
+      const pad = 10;
+      const maxX = card.clientWidth - noBtn.offsetWidth - pad;
+      const maxY = card.clientHeight - noBtn.offsetHeight - pad;
 
-noBtn.addEventListener("mouseenter", moveNo);
-noBtn.addEventListener("touchstart", moveNo);
+      // Evite la zone des boutons (en gros le milieu)
+      let x = rand(pad, maxX);
+      let y = rand(pad, maxY);
 
-function moveNo() {
-  const card = document.querySelector(".card");
-  const maxX = card.offsetWidth - noBtn.offsetWidth;
-  const maxY = card.offsetHeight - noBtn.offsetHeight;
+      // Si y tombe au milieu (zone boutons), on décale vers le haut/bas
+      const middleTop = card.clientHeight * 0.45;
+      const middleBot = card.clientHeight * 0.78;
+      if (y > middleTop && y < middleBot) {
+        y = (Math.random() < 0.5) ? rand(pad, middleTop - 20) : rand(middleBot + 10, maxY);
+      }
 
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
+      noBtn.style.left = x + "px";
+      noBtn.style.top  = y + "px";
+    }
 
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
-}
+    // démarre direct + bouge tout seul
+    moveNo();
+    setInterval(moveNo, 120); // vitesse de ouf
 
-function accept(love) {
-  document.querySelector(".buttons").style.display = "none";
-  noBtn.style.display = "none";
+    function accept(love){
+      document.getElementById("buttons").style.display = "none";
+      noBtn.style.display = "none";
 
-  const result = document.getElementById("result");
-  result.style.display = "block";
+      const result = document.getElementById("result");
+      result.style.display = "block";
 
-  if (love) {
-    result.innerHTML = `
-      💍 Je t’aime et je t’aimerai toujours,<br>
-      l’amour de ma vie,<br>
-      la future maman de mes enfants.<br><br>
-      Je ferai de toi ma reine 👑<br><br>
-      On va tout surmonter ensemble.<br>
-      Je crois en toi, en nous et en notre avenir.<br>
-      Si ce n’est pas toi, c’est personne ❤️
-    `;
-  } else {
-    result.innerHTML = "Je savais que tu dirais oui 💖";
-  }
-}
-</script>
-
+      if(love){
+        result.innerHTML = `
+          💍 Je t’aime et je t’aimerai toujours, l’amour de ma vie,<br>
+          la future maman de mes enfants.<br>
+          Je ferai de toi ma reine 👑<br><br>
+          On va tout surmonter ensemble, je crois en toi, en nous et en notre avenir,<br>
+          si ce n’est pas toi, c’est personne ❤️
+        `;
+      } else {
+        result.innerHTML = `Je savais que tu dirais oui 💖`;
+      }
+    }
+  </script>
 </body>
 </html>
