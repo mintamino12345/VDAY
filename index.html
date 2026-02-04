@@ -2,23 +2,17 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Valentine 💖</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Valentine 💘</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
       margin: 0;
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      color: #fff;
       overflow: hidden;
-      color: white;
       background: #0b1220;
     }
 
@@ -29,89 +23,113 @@
       background-image: url("IMG_8383.png");
       background-size: cover;
       background-position: center;
-      filter: blur(2px) brightness(0.6);
-      transform: scale(1.05);
-      z-index: -2;
+      background-repeat: no-repeat;
+      transform: scale(1.02);
+      filter: saturate(1.05) contrast(1.02) brightness(0.88);
+      z-index: 0;
     }
-
+    /* Dark overlay for readability (photo still visible) */
     .overlay {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle, rgba(0,0,0,0.2), rgba(0,0,0,0.65));
-      z-index: -1;
+      background: radial-gradient(circle at 30% 10%, rgba(0,0,0,0.25), rgba(0,0,0,0.70));
+      z-index: 1;
     }
 
+    /* Center card */
+    .wrap {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+    }
     .card {
-      width: min(92vw, 520px);
-      background: rgba(255,255,255,0.12);
+      width: min(520px, 92vw);
+      background: rgba(10, 16, 28, 0.55);
+      border: 1px solid rgba(255,255,255,0.12);
       backdrop-filter: blur(14px);
       border-radius: 22px;
-      padding: 28px 22px;
+      padding: 26px 18px 22px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.45);
       text-align: center;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
 
     h1 {
-      font-size: 28px;
-      margin-bottom: 20px;
-      line-height: 1.25;
+      margin: 0 0 18px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      line-height: 1.15;
+      font-size: 30px;
+      text-shadow: 0 8px 22px rgba(0,0,0,0.35);
     }
 
     .buttons {
       position: relative;
-      height: 170px;
       display: flex;
       flex-direction: column;
       gap: 14px;
-      margin-top: 20px;
+      padding-top: 4px;
+      padding-bottom: 14px;
     }
 
-    button {
-      padding: 14px;
+    .btn {
+      width: 100%;
+      padding: 14px 14px;
       font-size: 18px;
-      font-weight: 700;
-      border-radius: 14px;
-      border: none;
+      font-weight: 800;
+      border-radius: 16px;
+      border: 0;
       cursor: pointer;
-      transition: transform 0.15s ease;
+      transition: transform 0.08s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
+    .btn:active { transform: scale(0.99); }
 
-    button:active {
-      transform: scale(0.97);
+    .yes { background: #5da6ff; color: #06152a; }
+    .love { background: #ff72b6; color: #2a0316; }
+
+    /* No button: absolute and stays BELOW yes buttons area, never covers them */
+    .no-zone {
+      position: relative;
+      height: 70px;         /* reserved space under the 2 yes buttons */
+      margin-top: 2px;
     }
-
-    .yes {
-      background: #5aa9ff;
-      color: #0b1220;
-    }
-
-    .yes2 {
-      background: #ff70b8;
-      color: #0b1220;
-    }
-
-    /* NO button that escapes */
     .no {
       position: absolute;
       left: 10px;
-      top: 110px;
-      width: calc(100% - 20px);
-      height: 52px;
-      border-radius: 14px;
-      background: rgba(255,255,255,0.18);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: rgba(255,255,255,0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
+      top: 10px;
+      width: 46%;
+      padding: 12px 12px;
+      font-size: 18px;
+      font-weight: 800;
+      border-radius: 16px;
+      border: 0;
+      background: rgba(180,180,180,0.25);
+      color: rgba(255,255,255,0.92);
+      cursor: default;
       user-select: none;
+      touch-action: none; /* helps prevent "grabbing" */
+      backdrop-filter: blur(8px);
     }
 
     .result {
+      display: none;
+      margin-top: 6px;
       font-size: 18px;
-      line-height: 1.5;
+      line-height: 1.45;
+      font-weight: 650;
       white-space: pre-line;
+      text-shadow: 0 8px 22px rgba(0,0,0,0.35);
+    }
+
+    .small {
+      opacity: 0.9;
+      font-weight: 650;
+      margin-top: 8px;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -120,53 +138,89 @@
   <div class="bg"></div>
   <div class="overlay"></div>
 
-  <div class="card" id="card">
-    <h1>
-      Ines Miss Belhaj 💖<br>
-      Would you be my Valentine?
-    </h1>
+  <div class="wrap">
+    <div class="card" id="card">
+      <h1 id="title">Ines Miss Belhaj 💖<br/>Would you be my Valentine?</h1>
 
-    <div class="buttons" id="buttons">
-      <button class="yes" id="yes1">Yes</button>
-      <button class="yes2" id="yes2">Yes, l’amour de ma vie</button>
-      <div class="no" id="no">No</div>
+      <div class="buttons" id="buttons">
+        <button class="btn yes" id="yesBtn">Yes</button>
+        <button class="btn love" id="loveBtn">Yes, l’amour de ma vie</button>
+
+        <!-- Reserved zone so NO never covers YES buttons -->
+        <div class="no-zone" id="noZone">
+          <button class="no" id="noBtn" aria-hidden="true">No</button>
+        </div>
+      </div>
+
+      <div class="result" id="result"></div>
+      <div class="small" id="hint">💡 Astuce : essaie de cliquer sur “No” 😈</div>
     </div>
-
-    <div class="result" id="result" style="display:none;"></div>
   </div>
 
   <script>
-    const yes1 = document.getElementById("yes1");
-    const yes2 = document.getElementById("yes2");
-    const no = document.getElementById("no");
-    const buttons = document.getElementById("buttons");
+    const yesBtn = document.getElementById("yesBtn");
+    const loveBtn = document.getElementById("loveBtn");
+    const noBtn = document.getElementById("noBtn");
+    const noZone = document.getElementById("noZone");
     const result = document.getElementById("result");
-
-    // Make NO button move randomly
-    setInterval(() => {
-      const x = Math.random() * 60 - 30;
-      const y = Math.random() * 40 - 20;
-      no.style.transform = `translate(${x}px, ${y}px)`;
-    }, 500);
+    const buttons = document.getElementById("buttons");
+    const hint = document.getElementById("hint");
 
     function showResult(choice) {
       buttons.style.display = "none";
+      hint.style.display = "none";
       result.style.display = "block";
 
+      // Same message regardless of which Yes, but you can tweak if you want
       result.textContent =
-`✅ Choix validé : ${choice}
-
-Je t’aime et je t’aimerais toujours l’amour de ma vie,
-la future maman de mes enfants.
-Je ferais de toi ma reine.
-
-On va tout surmonter ensemble,
-je crois en toi, en nous et en notre avenir.
-Si ce n’est pas toi, c’est personne. 💖`;
+        "Je t’aime et je t’aimerais toujours l’amour de ma vie,\n" +
+        "la future maman de mes enfants.\n" +
+        "Je ferais de toi ma reine.\n" +
+        "On va tout surmonter ensemble, je crois en toi, en nous et en notre avenir,\n" +
+        "si ce n’est pas toi, c’est personne. 💘";
     }
 
-    yes1.onclick = () => showResult("Yes");
-    yes2.onclick = () => showResult("Yes, l’amour de ma vie 💍");
+    yesBtn.addEventListener("click", () => showResult("yes"));
+    loveBtn.addEventListener("click", () => showResult("love"));
+
+    // Make NO unclickable + super fast escape
+    function moveNoFast() {
+      const zoneRect = noZone.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = Math.max(0, zoneRect.width - btnRect.width);
+      const maxY = Math.max(0, zoneRect.height - btnRect.height);
+
+      // random spot in reserved zone
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      noBtn.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    // Trigger on hover-ish events + touch proximity
+    ["mouseenter","mouseover","touchstart","touchmove"].forEach(evt => {
+      noBtn.addEventListener(evt, (e) => {
+        e.preventDefault();
+        moveNoFast();
+      }, { passive: false });
+    });
+
+    // Extra: if finger gets near the NO zone, it runs away fast
+    noZone.addEventListener("pointermove", () => moveNoFast());
+
+    // Also move periodically so it looks “alive” and fast
+    setInterval(moveNoFast, 250); // speed: lower = faster/crazier
+
+    // Start position
+    moveNoFast();
+
+    // Prevent click entirely
+    noBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      moveNoFast();
+      return false;
+    });
   </script>
 </body>
 </html>
