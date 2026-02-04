@@ -1,89 +1,138 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Valentine 💖</title>
 
   <style>
-    body{
-      margin:0;
-      height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background: linear-gradient(135deg, #0f172a, #1f2937);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-      color:white;
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .card{
-      text-align:center;
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f172a, #020617);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+    }
+
+    .card {
       background: rgba(255,255,255,0.08);
-      padding:30px;
-      border-radius:20px;
-      width:min(420px,90%);
-      box-shadow:0 20px 50px rgba(0,0,0,.4);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 32px 24px;
+      width: 90%;
+      max-width: 420px;
+      text-align: center;
+      position: relative;
     }
 
-    h1{ margin-bottom:20px; }
-
-    .buttons{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      margin-top:20px;
+    h1 {
+      font-size: 26px;
+      margin-bottom: 24px;
     }
 
-    button{
-      padding:14px;
-      font-size:18px;
-      border:none;
-      border-radius:12px;
-      cursor:pointer;
-      background:#60a5fa;
-      color:#0f172a;
-      font-weight:600;
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 24px;
+      position: relative;
     }
 
-    button:last-child{
-      background:#f472b6;
-      color:#111;
+    button {
+      padding: 14px;
+      font-size: 18px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.2s;
     }
 
-    .result{
-      display:none;
-      font-size:26px;
-      margin-top:10px;
+    .yes {
+      background: #60a5fa;
+      color: #020617;
+      font-weight: 600;
+    }
+
+    .yes-love {
+      background: #f472b6;
+      color: #020617;
+      font-weight: 700;
+    }
+
+    .no {
+      background: #374151;
+      color: #e5e7eb;
+      position: absolute;
+      left: 0;
+      right: 0;
+    }
+
+    .result {
+      font-size: 20px;
+      line-height: 1.5;
     }
   </style>
 </head>
 
 <body>
-  <div class="card">
-    <h1>Ines 💖<br>Would you be my Valentine?</h1>
 
-    <div class="buttons" id="choices">
-      <button onclick="answer('Yes ❤️')">Yes</button>
-      <button onclick="answer('Yes, l’amour de ma vie 💍')">
-        Yes, l’amour de ma vie
-      </button>
+  <div class="card" id="card">
+    <h1>
+      Ines Miss Belhaj 💖<br>
+      Would you be my Valentine?
+    </h1>
+
+    <div class="buttons" id="buttons">
+      <button class="yes" onclick="accept()">Yes</button>
+      <button class="yes-love" onclick="accept()">Yes, l’amour de ma vie</button>
+      <button class="no" id="noBtn">Non</button>
     </div>
-
-    <div class="result" id="result"></div>
   </div>
 
   <script>
-    function answer(text){
-      document.getElementById("choices").style.display = "none";
-      const r = document.getElementById("result");
-      r.style.display = "block";
-      r.innerHTML = `
-        ${text}<br><br>
-        C’est officiel maintenant 💖<br>
-        Je t’attendais 🌹
+    const noBtn = document.getElementById("noBtn");
+    const card = document.getElementById("card");
+
+    function moveNo() {
+      const cardRect = card.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      const maxX = cardRect.width - btnRect.width;
+      const maxY = cardRect.height - btnRect.height;
+
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
+
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    }
+
+    noBtn.addEventListener("mouseenter", moveNo);
+    noBtn.addEventListener("touchstart", moveNo);
+
+    function accept() {
+      card.innerHTML = `
+        <div class="result">
+          <div style="font-size:22px; margin-bottom:14px;">
+            Yes, l’amour de ma vie 💍
+          </div>
+
+          <div>
+            Je t’aime et je t’aimerai toujours l’amour de ma vie,<br>
+            la future maman de mes enfants.<br><br>
+            Je ferai de toi ma reine 👑❤️
+          </div>
+        </div>
       `;
     }
   </script>
+
 </body>
 </html>
